@@ -103,7 +103,7 @@ void moveGripperTo1500()
 
 void moveGripperTo2200()
 {
-    asyncServo6.Move(2200, 1000); // Move gripper to 2200
+    asyncServo6.Move(1800, 1000); // Move gripper to 2200
     currentState = GripperB; 
     movementStartTime = millis();
 }
@@ -142,12 +142,7 @@ void loop()
             moveGripperTo2200(); // Move gripper to 2200
             break;
         case GripperB:
-            moveToPosition(positionA); // Return to Position A
-            currentState = PositionA2;
-            movementStartTime = millis();
-            break;
-        case PositionA2:
-            moveToPosition(positionC); // Transition to Position C
+            moveToPosition(positionC); // Return to Position A
             currentState = PositionC;
             movementStartTime = millis();
             break;
