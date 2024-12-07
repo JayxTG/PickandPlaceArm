@@ -51,7 +51,7 @@ void preprocessAllPositions() {
     preprocessPosition(positionB);
     preprocessPosition(positionC);
     preprocessPosition(positionD);
-}
+
 
 void setup()
 {
