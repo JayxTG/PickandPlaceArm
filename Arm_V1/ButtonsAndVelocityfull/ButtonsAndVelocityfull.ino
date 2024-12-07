@@ -9,7 +9,7 @@ const int buttonA1 = A1;
 const int buttonA2 = A2;
 
 // Angular velocity (degrees/second)
-const float omega = 25; // Example angular velocity
+const float omega = 30; // Example angular velocity
 
 // Define position states
 enum PositionState
@@ -44,23 +44,23 @@ enum PositionState
 
 PositionState currentState;
 
-// Red
-float positionA[] = {52.44, 40.85, -60.50, 33.6, 0.0};
-float positionB[] = {52.44, 40.85, -83.50, 38.6, 0.0};
-float positionC[] = {-52.44, 40.85, -60.50, 33.65, 0.0};
-float positionD[] = {-52.44, 40.85, -83.50, 38.65, 0.0};
+// Red {52.44, 40.85, -83.50, 38.6, 0.0};
+float positionA[] = {53.81, 74.31, -73.68, -4.62, 0.0};
+float positionB[] = {53.81, 40.85, -83.50, 38.65, 0.0}; //(20,15)
+float positionC[] = {-44.3, 76.43, -74.79, -5.63, 0.0};
+float positionD[] = {-44.30, 42.57, -84.93, 38.35, 0.0};// (17.5,17.5)
 
 // Green
-float positionE[] = {45.60, 23.22, -65.54, 33.32, 0.0};
-float positionF[] = {45.60, 23.22, -85.54, 38.32, 0.0};
-float positionG[] = {-45.60, 23.22, -65.54, 33.32, 0.0};
-float positionH[] = {-45.60, 23.22, -85.54, 38.32, 0.0};
+float positionE[] = {37.5575, 74.31, -73.68, -4.62, 0.0};
+float positionF[] = {37.5575, 40.85, -83.50, 38.65, 0.0};
+float positionG[] = {-37.27, 49.21, -57.25, 4.04, 0.0};
+float positionH[] = {-37.27, 22.23, -64.35, 38.12, 0.1};
 
 // Blue
-float positionI[] = {30.00, 25.00, -65.00, 20.00, 0.0};
-float positionJ[] = {30.00, 25.00, -85.00, 25.00, 0.0};
-float positionK[] = {-30.00, 25.00, -65.00, 20.00, 0.0};
-float positionL[] = {-30.00, 25.00, -85.00, 25.00, 0.0};
+float positionI[] = {22.439, 59.623, -64.885, 1.262, 0.0};
+float positionJ[] = {22.439, 29.750, -72.911, 39.162, 0.0};
+float positionK[] = {-31.943, 26.058, -35.473, 5.416, 0.0};
+float positionL[] = {-31.943, 5.162, -41.341, 32.179, 0.0};
 
 //center
 float center[] = {0, 0, 0, 0, 0, 0}; 
@@ -102,8 +102,9 @@ void preprocessPosition(float position[])
 {
     if (position[0] > 0)
     {
-        position[0] -= 4;
-    }
+        position[0] = position[0]-3;
+        Serial.print(position[0]);
+    } 
 }
 
 void preprocessAllPositions()
@@ -112,6 +113,14 @@ void preprocessAllPositions()
     preprocessPosition(positionB);
     preprocessPosition(positionC);
     preprocessPosition(positionD);
+    preprocessPosition(positionE);
+    preprocessPosition(positionF);
+    preprocessPosition(positionG);
+    preprocessPosition(positionH);
+    preprocessPosition(positionI);
+    preprocessPosition(positionJ);
+    preprocessPosition(positionK);
+    preprocessPosition(positionL);
 }
 
 // Function to move servos based on angles and duration
@@ -147,6 +156,7 @@ void moveToCenter()
     asyncServo4.Move(1500, 2000);
     asyncServo5.Move(1500, 2000);
     currentState = Center;
+
 }
 
 void setup()
@@ -350,6 +360,33 @@ void loop()
                 moveToCenter(); // Go to Center
                 movementStartTime = millis();
                 break;
+
+            case Center:
+                  while (true)
+                  {
+                      if (digitalRead(buttonA0) == LOW)
+                      {
+                          moveToPosition(positionA, calculateMovementTime(center, positionA));
+                          currentState = PositionA;
+                          movementStartTime = millis();
+                          break;
+                      }
+                      else if (digitalRead(buttonA1) == LOW)
+                      {
+                          moveToPosition(positionE, calculateMovementTime(center, positionE));
+                          currentState = PositionE;
+                          movementStartTime = millis();
+                          break;
+                      }
+                      else if (digitalRead(buttonA2) == LOW)
+                      {
+                          moveToPosition(positionI, calculateMovementTime(center, positionI));
+                          currentState = PositionI;
+                          movementStartTime = millis();
+                          break;
+                      }
+                      break;
+                  }
         }
-    }
+  }
 }
